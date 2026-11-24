@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HERBLOOM | Herbal Shampoo</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f7f5ed;color:#354b3b}
+header{background:#e5eddf;padding:22px 8%;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:27px;font-weight:bold;letter-spacing:2px;color:#42634b}
+nav a{margin-left:20px;color:#42634b;text-decoration:none}
+.hero{text-align:center;padding:65px 20px;background:#dce8d8}
+.hero h1{font-size:42px;margin:0 0 12px}
+.hero p{font-size:17px}
+.section{padding:40px 8%;text-align:center}
+.products{display:flex;justify-content:center;gap:25px;flex-wrap:wrap}
+.product{background:white;border-radius:16px;padding:20px;width:280px;box-shadow:0 4px 15px #0001}
+.product .picture{height:160px;background:#e8eee3;border-radius:12px;display:grid;place-items:center;font-size:65px}
+.price{font-size:23px;color:#527653;font-weight:bold}
+button{background:#527653;color:white;border:0;padding:12px 20px;border-radius:8px;cursor:pointer}
+button:hover{background:#354b3b}
+.cart{background:white;border-radius:15px;padding:25px;max-width:650px;margin:20px auto;text-align:left}
+input,textarea{width:100%;padding:12px;margin:8px 0 15px;border:1px solid #ccc;border-radius:7px}
+footer{text-align:center;padding:25px;background:#e5eddf}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🌿 HERBLOOM</div>
+  <nav>
+    <a href="#home">หน้าหลัก</a>
+    <a href="#products">สินค้า</a>
+    <a href="#cart">ตะกร้า 🛒</a>
+  </nav>
+</header>
+
+<section class="hero" id="home">
+  <h1>HERBLOOM</h1>
+  <h2>Nature in Every Drop</h2>
+  <p>ความงามจากธรรมชาติในทุกหยด</p>
+  <p>ดูแลเส้นผมในแบบที่เป็นคุณ</p>
+  <a href="#products"><button>เลือกซื้อสินค้า</button></a>
+</section>
+
+<section class="section" id="products">
+  <h2>Our Products 🌱</h2>
+  <p>ผลิตภัณฑ์ดูแลเส้นผมจาก HERBLOOM</p>
+
+  <div class="products">
+    <div class="product">
+      <div class="picture">🌿</div>
+      <h3>Herbal Fresh Shampoo</h3>
+      <p>แชมพูสูตรสมุนไพร กลิ่นสดชื่น</p>
+      <p>SKU: HB001</p>
+      <div class="price">159 บาท</div>
+      <button onclick="addToCart('HB001')">เพิ่มลงตะกร้า</button>
+    </div>
+
+    <div class="product">
+      <div class="picture">🍃</div>
+      <h3>Smooth Care Shampoo</h3>
+      <p>แชมพูสูตรบำรุงผมนุ่มลื่น</p>
+      <p>SKU: HB002</p>
+      <div class="price">189 บาท</div>
+      <button onclick="addToCart('HB002')">เพิ่มลงตะกร้า</button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="cart">
+  <h2>🛒 Shopping Cart</h2>
+  <div class="cart">
+    <div id="cartItems">ยังไม่มีสินค้าในตะกร้า</div>
+    <h3 id="total">ยอดรวม: 0 บาท</h3>
+
+    <h3>ข้อมูลจัดส่ง</h3>
+    <form id="orderForm">
+      <label>ชื่อผู้รับ</label>
+      <input id="customer" required placeholder="กรอกชื่อ-นามสกุล">
+
+      <label>เบอร์โทรศัพท์</label>
+      <input id="phone" required type="tel" placeholder="กรอกเบอร์โทรศัพท์">
+
+      <label>ที่อยู่จัดส่ง</label>
+      <textarea id="address" required placeholder="กรอกที่อยู่จัดส่ง"></textarea>
+
+      <button type="submit">ยืนยันคำสั่งซื้อ</button>
+    </form>
+    <p id="message"></p>
+  </div>
+</section>
+
+<footer>
+  <h3>HERBLOOM 🌿</h3>
+  <p>Nature in Every Drop</p>
+  <p>Herbal Shampoo Online Store</p>
+</footer>
+
+<script>
+const products = {
+  HB001: {name:"Herbal Fresh Shampoo",price:159},
+  HB002: {name:"Smooth Care Shampoo",price:189}
+};
+
+let cart = {};
+
+function addToCart(sku){
+  cart[sku]=(cart[sku]||0)+1;
+  renderCart();
+}
+
+function renderCart(){
+  const items=document.getElementById("cartItems");
+  let total=0;
+  items.innerHTML="";
+
+  for(const sku in cart){
+    const p=products[sku];
+    const sum=p.price*cart[sku];
+    total+=sum;
+    items.innerHTML+=`
+      <p>${sku} - ${p.name}
+      จำนวน ${cart[sku]} ชิ้น
+      (${sum} บาท)
+      <button onclick="removeItem('${sku}')">ลบ</button>
+      </p>`;
+  }
+
+  if(Object.keys(cart).length===0){
+    items.innerHTML="ยังไม่มีสินค้าในตะกร้า";
+  }
+
+  document.getElementById("total").textContent=
+    "ยอดรวม: "+total+" บาท";
+}
+
+function removeItem(sku){
+  delete cart[sku];
+  renderCart();
+}
+
+document.getElementById("orderForm").addEventListener("submit",function(e){
+  e.preventDefault();
+
+  if(Object.keys(cart).length===0){
+    alert("กรุณาเลือกสินค้าก่อนสั่งซื้อ");
+    return;
+  }
+
+  const order={
+    customer:document.getElementById("customer").value,
+    phone:document.getElementById("phone").value,
+    address:document.getElementById("address").value,
+    products:cart,
+    total:Object.keys(cart).reduce(
+      (sum,sku)=>sum+products[sku].price*cart[sku],0
+    )
+  };
+
+  document.getElementById("message").textContent=
+    "สร้างรายการสั่งซื้อเรียบร้อย! ยอดรวม "+order.total+" บาท (ตัวอย่างระบบ)";
+  alert("บันทึกตัวอย่างคำสั่งซื้อเรียบร้อย");
+
+  cart={};
+  renderCart();
+  this.reset();
+});
+</script>
+</body>
+</html>
